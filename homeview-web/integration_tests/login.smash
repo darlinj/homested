@@ -1,0 +1,19 @@
+* Log In
+    Type 'username' into 'input[name=Username]'
+        Click '.login-button'
+ 
+Open Chrome
+    Navigate to '127.0.0.1:3000'
+        On homepage {
+            props({
+                'login button': `.login-button`,
+            });
+ 
+        }
+            Log In
+                ~ Log Out
+                    log  out
+ 
+* Log Out {
+    (await $('.logout-button')).click();
+}
