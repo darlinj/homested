@@ -1,0 +1,59 @@
+service: homeview
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+
+plugins:
+  - serverless-s3-sync
+custom:
+  siteName: homeview-website
+  hostedZoneName: bthomeview.com
+  aliasHostedZoneId: Z1BKCTXD74EZPE
+  aliasDNSName: s3-website-eu-west-1.amazonaws.com
+  s3Sync:
+    - bucketName: ${self:custom.siteName}
+      localDir: build
+
+resources:
+  Resources:
+    HomeviewSite:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.siteName}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+    HomeviewSiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: HomeviewSite
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+              - s3:GetObject
+              Resource:
+                Fn::Join: [
+                  "", [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "HomeviewSite"
+                    },
+                    "/*"
+                  ]
+                ]
+                #    DnsRecord:
+                #      Type: "AWS::Route53::RecordSet"
+                #      Properties:
+                #        AliasTarget:
+                #          DNSName: ${self:custom.aliasDNSName}
+                #          HostedZoneId: ${self:custom.aliasHostedZoneId}
+                #        HostedZoneName: ${self:custom.siteName}.
+                #        Name:
+                #          Ref: HomeviewSite
+                #        Type: 'A'
