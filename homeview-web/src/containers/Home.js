@@ -22,7 +22,7 @@ export default class Home extends Component {
 			const testApiCall = await this.testApiCall();
 			this.setState({ testApiCall });
 		} catch (e) {
-			alert(e);
+			console.log(e);
 		}
 
 		this.setState({ isLoading: false });

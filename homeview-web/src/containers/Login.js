@@ -35,7 +35,7 @@ export default class Login extends Component {
       this.props.userHasAuthenticated(true);
       this.props.history.push('/');
     } catch(e) {
-      alert(e.message);
+      console.log(e.message);
       this.setState({ isLoading: false });
     }
 

@@ -18,11 +18,11 @@ class App extends Component {
   async componentDidMount() {
     try {
       if(await Auth.currentSession()) {
-        this.userHasAuthenticated(true);
+		    this.setState({ isAuthenticated: true });
       }
     } catch (e) {
       if( e !== 'No current user') {
-        alert(e);
+        console.log(e);
       }
     }
     this.setState({ isAuthenticated: false });
@@ -34,19 +34,19 @@ class App extends Component {
 
   handleLogout = async event => {
     await Auth.signOut();
-    this.userHasAuthenticated(false);
+		this.setState({ isAuthenticated: false });
     this.props.history.push('/login');
   };
 
   userStatus = () => {
     const loggedIn = (
       <Fragment>
-      <LinkContainer to="/signup">
-      <NavItem>Signup</NavItem>
-      </LinkContainer>
-      <LinkContainer to="/login">
-      <NavItem>Login</NavItem>
-      </LinkContainer>
+        <LinkContainer to="/signup">
+          <NavItem>Signup</NavItem>
+        </LinkContainer>
+        <LinkContainer to="/login">
+          <NavItem>Login</NavItem>
+        </LinkContainer>
       </Fragment>
     )
     const loggedOut =  ( <NavItem onClick={this.handleLogout}>Logout</NavItem> )
@@ -63,20 +63,20 @@ class App extends Component {
     };
     return (
       <div className="App container">
-      <Navbar fluid collapseOnSelect>
-      <Navbar.Header>
-      <Navbar.Brand>
-      <Link to="/">Test application</Link>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-      </Navbar.Header>
-      <Navbar.Collapse>
-      <Nav pullRight>
-      {this.userStatus()}
-      </Nav>
-      </Navbar.Collapse>
-      </Navbar>
-      <Routes childProps={childProps} />
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">Test application</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              {this.userStatus()}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes childProps={childProps} />
       </div>
     );
   }
