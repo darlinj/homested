@@ -1,9 +1,9 @@
-import { LinkContainer } from 'react-router-bootstrap';
 import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavItem } from 'react-bootstrap';
 import Routes from './Routes';
 import { Auth } from 'aws-amplify';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 class App extends Component {
@@ -40,14 +40,10 @@ class App extends Component {
 
   userStatus = () => {
     const loggedIn = (
-      <Fragment>
-        <LinkContainer to="/signup">
-          <NavItem>Signup</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/login">
-          <NavItem>Login</NavItem>
-        </LinkContainer>
-      </Fragment>
+      <>
+          <Nav.Link href="/signup">Signup</Nav.Link>
+          <Nav.Link href="/login">Login</Nav.Link>
+      </>
     )
     const loggedOut =  ( <NavItem onClick={this.handleLogout}>Logout</NavItem> )
 
@@ -63,12 +59,14 @@ class App extends Component {
     };
     return (
       <div className="App container">
-        <Navbar collapseOnSelect>
-            <Navbar.Brand>
-              <Link to="/">Test application</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand href="/">
+            Test application
+          </Navbar.Brand>
+          <Navbar.Toggle />
           <Navbar.Collapse>
+            <Nav className="mr-auto">
+            </Nav>
             <Nav>
               {this.userStatus()}
             </Nav>
