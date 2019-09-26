@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { Glyphicon } from 'glyphicons';
 import './LoaderButton.css';
 
 export default ({ isLoading, text, loadingText, className = '', disabled = false, ...props }) => (
