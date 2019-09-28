@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { Nav, Navbar} from 'react-bootstrap';
 import Routes from './Routes';
 import { Auth } from 'aws-amplify';
 import UserStatus from './components/UserStatus';
@@ -20,7 +20,7 @@ class App extends Component {
   async componentDidMount() {
     try {
       if(await Auth.currentSession()) {
-        this.setState({ isAuthenticated: true });
+        this.userHasAuthenticated(true);
       }
     } catch (e) {
       if( e !== 'No current user') {
@@ -28,7 +28,7 @@ class App extends Component {
       }
     }
     if(this.mounted === true) {
-      this.setState({ isAuthenticated: false });
+      this.userHasAuthenticated(false);
     }
   }
 
@@ -55,7 +55,7 @@ class App extends Component {
       <div className="App container">
         <Navbar bg="light" expand="lg">
           <Navbar.Brand href="/">
-            Test application
+            Homeview
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse>
