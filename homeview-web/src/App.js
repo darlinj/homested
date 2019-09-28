@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Container, Nav, Navbar, NavItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import Routes from './Routes';
 import { Auth } from 'aws-amplify';
+import UserStatus from './components/UserStatus';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.mounted = true;
     this.state = {
       isAuthenticated: false,
       isAuthenticating: true
@@ -18,17 +20,23 @@ class App extends Component {
   async componentDidMount() {
     try {
       if(await Auth.currentSession()) {
-		    this.setState({ isAuthenticated: true });
+        this.setState({ isAuthenticated: true });
       }
     } catch (e) {
       if( e !== 'No current user') {
         console.log(e);
       }
     }
-    this.setState({ isAuthenticated: false });
+    if(this.mounted === true) {
+      this.setState({ isAuthenticated: false });
+    }
   }
 
-  userHasAuthenticated = authenticated => {
+  componentWillUnmount = () => {
+    this.mounted = false;
+  }
+
+  userHasAuthenticated = (authenticated) => {
 		this.setState({ isAuthenticated: authenticated });
 	};
 
@@ -36,20 +44,6 @@ class App extends Component {
     await Auth.signOut();
 		this.setState({ isAuthenticated: false });
     this.props.history.push('/login');
-  };
-
-  userStatus = () => {
-    const loggedIn = (
-      <>
-          <Nav.Link href="/signup">Signup</Nav.Link>
-          <Nav.Link href="/login">Login</Nav.Link>
-      </>
-    )
-    const loggedOut =  ( <NavItem onClick={this.handleLogout}>Logout</NavItem> )
-
-    const foo = this.state.isAuthenticated ? loggedOut : loggedIn
-
-    return   foo;
   };
 
   render() {
@@ -68,7 +62,7 @@ class App extends Component {
             <Nav className="mr-auto">
             </Nav>
             <Nav>
-              {this.userStatus()}
+              <UserStatus isAuthenticated={this.state.isAuthenticated} handleLogout={this.handleLogout} />
             </Nav>
           </Navbar.Collapse>
         </Navbar>
