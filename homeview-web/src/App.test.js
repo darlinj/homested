@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import toJson from 'enzyme-to-json';
 import Adapter from 'enzyme-adapter-react-16';
-import { mount, configure } from 'enzyme';
+import { mount, shallow, configure } from 'enzyme';
 import { BrowserRouter as Router, MemoryRouter } from 'react-router-dom';
 import Home from './containers/Home';
 import NotFound from './containers/NotFound';
@@ -24,6 +24,7 @@ it('renders the welcome page by default', () => {
   );
   expect(wrapper.find(Home)).toHaveLength(1);
   expect(wrapper.find(NotFound)).toHaveLength(0);
+  expect(wrapper.contains('Homeview')).toEqual(true);
 });
 
 it('renders the 404 page if a random page is requested', () => {
