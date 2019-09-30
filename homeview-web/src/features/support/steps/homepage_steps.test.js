@@ -24,7 +24,7 @@ defineFeature(feature, test => {
       });
 
     	then('I see the welcome message', () => {
-        expect(wrapper.text()).toContain('simple react');
+        expect(wrapper.text()).toContain('Welcome to Homeview');
     	});
 
     	and('I am logged out', () => {

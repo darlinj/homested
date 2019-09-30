@@ -40,8 +40,8 @@ export default class Home extends Component {
 	renderLander() {
 		return (
 			<div className="lander">
-				<h1>Test web app</h1>
-				<p>A simple react test app</p>
+				<h1>Welcome to Homeview</h1>
+				<p>Please login to get started</p>
 			</div>
 		);
 	}
