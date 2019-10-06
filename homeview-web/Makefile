@@ -10,6 +10,10 @@ build:
 deploy: build
 	assume-role admin sls deploy
 
+.PHONY: update
+update: deploy
+	assume-role admin aws s3 sync build/ s3://homeview-website
+
 .PHONY: remove
 remove: 
 	assume-role admin sls remove --stage dev

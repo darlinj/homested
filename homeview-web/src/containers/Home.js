@@ -41,7 +41,7 @@ export default class Home extends Component {
 		return (
 			<div className="lander">
 				<h1>Welcome to Homeview</h1>
-				<p>Please login to get started</p>
+				<p>Please LOGIN to get started</p>
 			</div>
 		);
 	}

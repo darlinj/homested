@@ -15,6 +15,11 @@ custom:
   s3Sync:
     - bucketName: ${self:custom.siteName}
       localDir: build
+      params: # Content caching control settings have NOT BEEN TRIED
+        - index.html:
+          CacheControl: 'max-age=60' # 1 minute
+        - "static/js/*":
+          CacheControl: 'max-age=60' # 1 minute
 
 resources:
   Resources:
