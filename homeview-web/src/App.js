@@ -21,10 +21,11 @@ class App extends Component {
     try {
       if(await Auth.currentSession()) {
         this.userHasAuthenticated(true);
+        return;
       }
     } catch (e) {
       if( e !== 'No current user') {
-        console.log(e);
+        console.log("no current session" + e);
       }
     }
     if(this.mounted === true) {

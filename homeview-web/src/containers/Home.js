@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { API } from 'aws-amplify';
 import './Home.css';
+import Login from './Login';
 
 export default class Home extends Component {
   constructor(props) {
@@ -39,10 +40,7 @@ export default class Home extends Component {
 
 	renderLander() {
 		return (
-			<div className="lander">
-				<h1>Welcome to Homeview</h1>
-				<p>Please LOGIN to get started</p>
-			</div>
+      <Login { ...this.props }/>
 		);
 	}
 

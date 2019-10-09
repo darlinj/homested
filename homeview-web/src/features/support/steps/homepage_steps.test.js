@@ -23,8 +23,8 @@ defineFeature(feature, test => {
         );
       });
 
-    	then('I see the welcome message', () => {
-        expect(wrapper.text()).toContain('Welcome to Homeview');
+    	then('I see the login page', () => {
+        expect(wrapper.find("Login").exists()).toBe(true);
     	});
 
     	and('I am logged out', () => {
