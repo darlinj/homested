@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Nav, Navbar} from 'react-bootstrap';
 import Routes from './Routes';
 import {Auth} from 'aws-amplify';
-import UserStatus from './components/UserStatus';
+import NavBar from './components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -31,21 +30,10 @@ const App = props => {
     isAuthenticated: isAuthenticated,
     userHasAuthenticated: setAuthenticated,
   };
+
   return (
     <div className="App container">
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="/">Homeview</Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Nav className="mr-auto"></Nav>
-          <Nav>
-            <UserStatus
-              isAuthenticated={isAuthenticated}
-              handleLogout={handleLogout}
-            />
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} />
       <Routes childProps={childProps} />
     </div>
   );
