@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 import {Nav, Navbar} from 'react-bootstrap';
 import Routes from './Routes';
@@ -7,70 +7,48 @@ import UserStatus from './components/UserStatus';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.mounted = true;
-    this.state = {
-      isAuthenticated: false,
-      isAuthenticating: true,
-    };
-  }
+const App = props => {
+  const [isAuthenticated, setAuthenticated] = useState(false);
 
-  async componentDidMount() {
-    try {
-      if (await Auth.currentSession()) {
-        this.userHasAuthenticated(true);
+  useEffect(() => {
+    Auth.currentSession()
+      .then(() => {
+        setAuthenticated(true);
         return;
-      }
-    } catch (e) {
-      if (e !== 'No current user') {
-        console.log('no current session' + e);
-      }
-    }
-    if (this.mounted === true) {
-      this.userHasAuthenticated(false);
-    }
-  }
+      })
+      .catch(() => {
+        setAuthenticated(false);
+      });
+  }, []);
 
-  componentWillUnmount = () => {
-    this.mounted = false;
-  };
-
-  userHasAuthenticated = authenticated => {
-    this.setState({isAuthenticated: authenticated});
-  };
-
-  handleLogout = async event => {
+  const handleLogout = async event => {
     await Auth.signOut();
-    this.setState({isAuthenticated: false});
-    this.props.history.push('/login');
+    setAuthenticated(false);
+    props.history.push('/login');
   };
 
-  render() {
-    const childProps = {
-      isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated,
-    };
-    return (
-      <div className="App container">
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/">Homeview</Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse>
-            <Nav className="mr-auto"></Nav>
-            <Nav>
-              <UserStatus
-                isAuthenticated={this.state.isAuthenticated}
-                handleLogout={this.handleLogout}
-              />
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <Routes childProps={childProps} />
-      </div>
-    );
-  }
-}
+  const childProps = {
+    isAuthenticated: isAuthenticated,
+    userHasAuthenticated: setAuthenticated,
+  };
+  return (
+    <div className="App container">
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand href="/">Homeview</Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse>
+          <Nav className="mr-auto"></Nav>
+          <Nav>
+            <UserStatus
+              isAuthenticated={isAuthenticated}
+              handleLogout={handleLogout}
+            />
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <Routes childProps={childProps} />
+    </div>
+  );
+};
 
 export default withRouter(App);
