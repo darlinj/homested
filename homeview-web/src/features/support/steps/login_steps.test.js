@@ -1,24 +1,56 @@
 import {defineFeature, loadFeature} from 'jest-cucumber';
 import App from '../../../App';
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import {mount, configure} from 'enzyme';
+import {mount} from 'enzyme';
 import {MemoryRouter} from 'react-router-dom';
+import {Auth} from 'aws-amplify';
+import {act} from 'react-dom/test-utils';
 
 const feature = loadFeature('./src/features/login.feature');
 
+jest.mock('aws-amplify');
+
 defineFeature(feature, test => {
-  configure({adapter: new Adapter()});
   let wrapper;
+
+  beforeEach(() => {});
+
+  afterEach(() => {
+    Auth.currentSession.mockClear();
+  });
 
   const whenGoToTheRootPage = when => {
     when('I go to the root page', () => {
-      wrapper = mount(
-        <MemoryRouter initialEntries={['/']}>
-          <App />
-        </MemoryRouter>,
-      );
+      mockLoggedOutSession();
+      act(() => {
+        wrapper = mount(
+          <MemoryRouter initialEntries={['/']}>
+            <App />
+          </MemoryRouter>,
+        );
+      });
     });
+  };
+
+  const WhenGoToTheRootPageLoggedIn = when => {
+    when('I go to the root page', async () => {
+      mockLoggedInSession();
+      await act(async () => {
+        wrapper = mount(
+          <MemoryRouter initialEntries={['/']}>
+            <App />
+          </MemoryRouter>,
+        );
+      });
+    });
+  };
+
+  const mockLoggedOutSession = () => {
+    Auth.currentSession.mockRejectedValue('error');
+  };
+
+  const mockLoggedInSession = () => {
+    Auth.currentSession.mockResolvedValue('success');
   };
 
   test('Show the login page as default', ({when, then, and}) => {
@@ -36,14 +68,26 @@ defineFeature(feature, test => {
   test('Logging in successfully', ({when, and, then}) => {
     whenGoToTheRootPage(when);
 
-    and('I log in with valid credentials', () => {
-      wrapper
-        .find('#email123')
-        .simulate('change', {target: {value: 'validuser@bt.com'}});
-      wrapper.ref('password').simulate('change', {target: {value: 'password'}});
-      wrapper.find('form').simulate('submit');
+    and('I log in with valid credentials', async () => {
+      await act(async () => {
+        const email = wrapper.find('input[type="email"]');
+        email.simulate('change', {target: {value: 'validuser@bt.com'}});
+        const password = wrapper.find('input[type="password"]');
+        password.simulate('change', {target: {value: 'password'}});
+        wrapper.find('form').simulate('submit');
+      });
     });
 
-    then('I see that I am logged in', () => {});
+    then('I see that I am logged in', () => {
+      expect(wrapper.text()).toContain('Logout');
+    });
+  });
+
+  test('Show log out when I am logged in', ({when, then}) => {
+    WhenGoToTheRootPageLoggedIn(when);
+
+    then('I should see the logout link', () => {
+      expect(wrapper.text()).toContain('Logout');
+    });
   });
 });
