@@ -66,6 +66,36 @@ describe('Login', () => {
     expect(wrapper.text()).toContain('Logout');
   });
 
+  it('Logging in failure', async () => {
+    let wrapper;
+    mockLoggedOutSession();
+    Auth.signIn.mockImplementation(() => {
+      throw new Error('User not found');
+    });
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+    expect(wrapper.text()).toContain('Login');
+    await act(async () => {
+      const email = wrapper.find('input[type="email"]');
+      email.simulate('change', {
+        target: {value: 'baduser@bt.com', id: 'email'},
+      });
+      const password = wrapper.find('input[type="password"]');
+      await password.simulate('change', {
+        target: {value: 'rubbish', id: 'password'},
+      });
+      wrapper.find('form').simulate('submit');
+    });
+    expect(Auth.signIn.mock.calls[0][0]).toBe('baduser@bt.com');
+    expect(Auth.signIn.mock.calls[0][1]).toBe('rubbish');
+    expect(wrapper.text()).toContain('Login failed');
+  });
+
   it('Show log out when I am logged in', async () => {
     let wrapper;
     mockLoggedInSession();

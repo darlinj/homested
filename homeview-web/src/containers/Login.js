@@ -3,6 +3,7 @@ import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import './Login.css';
 import {Auth} from 'aws-amplify';
+import {toast} from 'react-toastify';
 
 export default class Login extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ export default class Login extends Component {
       this.props.userHasAuthenticated(true);
       this.props.history.push('/');
     } catch (e) {
-      console.log(e.message);
+      toast.error("Login failed! Please try again");
       this.setState({isLoading: false});
     }
   };
