@@ -7,14 +7,16 @@ import {act} from 'react-dom/test-utils';
 
 jest.mock('aws-amplify');
 
-describe("Login", () => {
-  let wrapper;
-
-  beforeEach(() => {});
+describe('Login', () => {
+  beforeEach(() => {
+    Auth.signIn.mockResolvedValue('success');
+  });
 
   afterEach(() => {
     Auth.currentSession.mockClear();
+    Auth.signIn.mockClear();
   });
+
   const mockLoggedOutSession = () => {
     Auth.currentSession.mockRejectedValue('error');
   };
@@ -23,47 +25,57 @@ describe("Login", () => {
     Auth.currentSession.mockResolvedValue('success');
   };
 
-  it('Show the login page as default', async() => {
-      mockLoggedOutSession();
-      await act(async () => {
-        wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
-            <App />
-          </MemoryRouter>,
-        );
-      });
-      expect(wrapper.find('Login').exists()).toBe(true);
-      expect(wrapper.text()).toContain('Login');
+  it('Show the login page as default', async () => {
+    let wrapper;
+    mockLoggedOutSession();
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+    expect(wrapper.find('Login').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Login');
   });
 
   it('Logging in successfully', async () => {
-      mockLoggedOutSession();
-      await act(async () => {
-        wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
-            <App />
-          </MemoryRouter>,
-        );
+    let wrapper;
+    mockLoggedOutSession();
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+    expect(wrapper.text()).toContain('Login');
+    await act(async () => {
+      const email = wrapper.find('input[type="email"]');
+      email.simulate('change', {
+        target: {value: 'validuser@bt.com', id: 'email'},
       });
-      await act(async () => {
-        const email = wrapper.find('input[type="email"]');
-        email.simulate('change', {target: {value: 'validuser@bt.com'}});
-        const password = wrapper.find('input[type="password"]');
-        password.simulate('change', {target: {value: 'password'}});
-        wrapper.find('form').simulate('submit');
+      const password = wrapper.find('input[type="password"]');
+      await password.simulate('change', {
+        target: {value: 'password', id: 'password'},
       });
-      expect(wrapper.text()).toContain('Logout');
+      wrapper.find('form').simulate('submit');
+    });
+    expect(Auth.signIn.mock.calls[0][0]).toBe('validuser@bt.com');
+    expect(Auth.signIn.mock.calls[0][1]).toBe('password');
+    expect(wrapper.text()).toContain('Logout');
   });
 
   it('Show log out when I am logged in', async () => {
-      mockLoggedInSession();
-      await act(async () => {
-        wrapper = mount(
-          <MemoryRouter initialEntries={['/']}>
-            <App />
-          </MemoryRouter>,
-        );
-      });
-      expect(wrapper.text()).toContain('Logout');
+    let wrapper;
+    mockLoggedInSession();
+    await act(async () => {
+      wrapper = mount(
+        <MemoryRouter initialEntries={['/']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+    expect(wrapper.text()).toContain('Logout');
   });
 });
