@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {MemoryRouter} from 'react-router-dom';
 import App from '../App';
-import {Auth} from 'aws-amplify';
+import {Auth, API} from 'aws-amplify';
 import {act} from 'react-dom/test-utils';
 
 jest.mock('aws-amplify');
@@ -10,6 +10,7 @@ jest.mock('aws-amplify');
 describe('Login', () => {
   beforeEach(() => {
     Auth.signIn.mockResolvedValue('success');
+    API.get.mockResolvedValue('success');
   });
 
   afterEach(() => {

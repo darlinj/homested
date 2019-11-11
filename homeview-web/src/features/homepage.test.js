@@ -10,7 +10,7 @@ jest.mock('aws-amplify');
 describe('Login', () => {
   beforeEach(() => {
     Auth.currentSession.mockResolvedValue('success');
-    API.get.mockResolvedValue({message: 'Go Serverless v1.1'});
+    API.get.mockResolvedValue({message: 'Go Serverless v1.0'});
   });
 
   afterEach(() => {

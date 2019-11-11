@@ -1,59 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { API } from 'aws-amplify';
 import './Home.css';
 import Login from './Login';
 
-export default class Home extends Component {
-  constructor(props) {
-		super(props);
+const Home = (props) => {
+  const [apiResponse, setApiResponse] = useState("Loading...");
 
-		this.state = {
-			isLoading: true,
-			testApiCall: []
-		};
-	}
-
-	async componentDidMount() {
-		if (!this.props.isAuthenticated) {
+	useEffect(() => {
+		if (!props.isAuthenticated) {
 			return;
 		}
 
-		try {
-			const testApiCall = await this.testApiCall();
-			this.setState({ testApiCall });
-		} catch (e) {
+    API.get('testApiCall', '/hello').then((response) => {
+        setApiResponse(response.message);
+    }).catch( (e) =>  {
 			console.log(e);
-		}
+		});
 
-		this.setState({ isLoading: false });
-	}
+	});
 
-	testApiCall() {
-		return API.get('testApiCall', '/hello');
-	}
-
-	renderTestAPI(testApiCall) {
-		console.log(testApiCall);
-		return testApiCall.message;
-	}
-
-	renderLander() {
+	const renderLander = () => {
 		return (
-      <Login { ...this.props }/>
+      <Login { ...props }/>
 		);
 	}
 
-	renderTest() {
+	const renderTest = () => {
 		return (
       <div className="test">
 				<h1>Test API call</h1>
-				<ListGroup>{!this.state.isLoading && this.renderTestAPI(this.state.testApiCall)}</ListGroup>
+				<ListGroup>{apiResponse}</ListGroup>
 			</div>
 		);
 	}
 
-	render() {
-		return <div className="Home">{this.props.isAuthenticated ? this.renderTest() : this.renderLander()}</div>;
-	}
+		return <div className="Home">{props.isAuthenticated ? renderTest() : renderLander()}</div>;
 }
+
+export default Home;
