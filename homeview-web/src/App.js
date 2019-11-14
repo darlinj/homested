@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 import Routes from './Routes';
-import {Auth} from 'aws-amplify';
+import {Auth, API} from 'aws-amplify';
 import NavBar from './components/NavBar';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,7 +10,7 @@ import './App.css';
 
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [customerData, setCustomerData] = useState("Some data");
+  const [customerData, setCustomerData] = useState('');
 
   useEffect(() => {
     Auth.currentSession()
@@ -29,21 +29,35 @@ const App = props => {
     props.history.push('/login');
   };
 
-  const getCustomerData = () => {
-    setCustomerData("some more data");
-  }
+  const getCustomerData = searchTerm => {
+    if (!isAuthenticated) {
+      return;
+    }
+    setCustomerData("Loading...");
+    API.get('testApiCall', '/hello')
+      .then(response => {
+        setCustomerData(response.message + searchTerm);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 
   const childProps = {
     isAuthenticated: isAuthenticated,
     userHasAuthenticated: setAuthenticated,
     getCustomerData: getCustomerData,
-    customerData: customerData
+    customerData: customerData,
   };
 
   return (
     <div className="App container">
       <ToastContainer />
-      <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} getCustomerData={getCustomerData} />
+      <NavBar
+        handleLogout={handleLogout}
+        isAuthenticated={isAuthenticated}
+        getCustomerData={getCustomerData}
+      />
       <Routes childProps={childProps} />
     </div>
   );

@@ -15,10 +15,10 @@ describe('Login', () => {
 
   afterEach(() => {
     Auth.currentSession.mockClear();
+    API.get.mockClear();
   });
 
-
-  it('Show the login page as default', async () => {
+  it('calls the API when I enter a search term', async () => {
     let wrapper;
     await act(async () => {
       wrapper = mount(
@@ -27,7 +27,16 @@ describe('Login', () => {
         </MemoryRouter>,
       );
     });
-    expect(wrapper.text()).toContain('Go Serverless v1.0');
+    wrapper.update();
+    await act(async () => {
+      const searchTerm = wrapper.find('input[type="text"]');
+      searchTerm.simulate('change', {
+        target: {value: 'customer1234', id: 'search-term'},
+      });
+    });
+    await act(async () => {
+      wrapper.find('form.search-form').simulate('submit');
+    });
+    expect(wrapper.text()).toContain('Go Serverless v1.0customer1234');
   });
-
 });

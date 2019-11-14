@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Form, FormControl, FormGroup, Button} from 'react-bootstrap';
 
 const NavForm = props => {
-  const [searchTerm, setSearchTerm] = useState('fff');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleChange = event => {
     setSearchTerm(event.target.value);
