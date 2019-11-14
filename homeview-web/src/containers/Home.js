@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import './Home.css';
 import Login from './Login';
 
@@ -7,20 +7,26 @@ const Home = props => {
     return <Login {...props} />;
   };
 
-  const renderTest = () => {
+  const renderCustomerDetails = () => {
     return (
       <div className="test">
-        Please enter the customer telephone number, RBSID or Serial Number of
-        the Hub
-        <h1>Test API call</h1>
+        <h1>Customer details</h1>
         <h2>{props.customerData} </h2>
       </div>
+    );
+  }
+
+  const renderMain = () => {
+    return (
+      <>
+      {props.customerData ? renderCustomerDetails() : "Please enter the customer telephone number, RBSID or Serial Number of the Hub" }
+      </>
     );
   };
 
   return (
     <div className="Home">
-      {props.isAuthenticated ? renderTest() : renderLander()}
+      {props.isAuthenticated ? renderMain() : renderLander()}
     </div>
   );
 };
