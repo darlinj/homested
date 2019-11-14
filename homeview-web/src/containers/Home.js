@@ -30,6 +30,7 @@ const Home = props => {
       Please enter the customer telephone number, RBSID or Serial Number of the Hub
         <h1>Test API call</h1>
         <ListGroup>{apiResponse}</ListGroup>
+      <h2>{props.customerData} </h2>
       </div>
     );
   };

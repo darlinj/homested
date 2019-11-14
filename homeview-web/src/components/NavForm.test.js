@@ -1,10 +1,11 @@
 import React from 'react';
 import {mount, configure} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import {act} from 'react-dom/test-utils';
 
 import NavForm from './NavForm';
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()});
 
 describe('The nav form component', () => {
   it('returns nothing by default', () => {
@@ -16,12 +17,22 @@ describe('The nav form component', () => {
     const wrapper = mount(<NavForm isAuthenticated="true" />);
     expect(wrapper.find('form').length).toBe(1);
   });
-//  xit('shows the logout link when logged out', () => {
-//    const someMethod = () => {};
-//    const wrapper = mount(<UserStatus isAuthenticated={true} handleLogout={someMethod} />);
-//    //console.log(wrapper.debug());
-//    const nav = wrapper.find('div.nav-item').first();
-//    expect(nav.text()).toBe('Logout');
-//    expect(nav.props().onClick).toBe(someMethod);
-//  });
+
+  it('calls the getCustomerData function when the form is submitted', async () => {
+    const callback = jest.fn(x => 'foo');
+    const wrapper = mount(
+      <NavForm isAuthenticated="true" getCustomerData={callback} />,
+    );
+    await act(async () => {
+      const searchTerm = wrapper.find('input.search-term');
+      searchTerm.simulate('change', {
+        target: {value: 'customer1234', id: 'search-term'},
+      });
+    });
+    await act(async () => {
+      wrapper.find('form.search-form').simulate('submit');
+    });
+    expect(callback.mock.calls.length).toBe(1);
+    expect(callback.mock.calls[0][0]).toBe('customer1234');
+  });
 });

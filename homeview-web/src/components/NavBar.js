@@ -13,7 +13,7 @@ const NavBar = props => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <NavForm isAuthenticated={props.isAuthenticated} />
+        <NavForm isAuthenticated={props.isAuthenticated} getCustomerData={props.getCustomerData} />
         <Nav className="mr-auto"></Nav>
         <Nav>
           <UserStatus

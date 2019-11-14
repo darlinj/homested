@@ -10,6 +10,7 @@ import './App.css';
 
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const [customerData, setCustomerData] = useState("Some data");
 
   useEffect(() => {
     Auth.currentSession()
@@ -28,15 +29,21 @@ const App = props => {
     props.history.push('/login');
   };
 
+  const getCustomerData = () => {
+    setCustomerData("some more data");
+  }
+
   const childProps = {
     isAuthenticated: isAuthenticated,
     userHasAuthenticated: setAuthenticated,
+    getCustomerData: getCustomerData,
+    customerData: customerData
   };
 
   return (
     <div className="App container">
       <ToastContainer />
-      <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} />
+      <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} getCustomerData={getCustomerData} />
       <Routes childProps={childProps} />
     </div>
   );
