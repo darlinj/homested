@@ -27,6 +27,7 @@ const Home = props => {
   const renderTest = () => {
     return (
       <div className="test">
+      Please enter the customer telephone number, RBSID or Serial Number of the Hub
         <h1>Test API call</h1>
         <ListGroup>{apiResponse}</ListGroup>
       </div>

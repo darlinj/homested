@@ -2,7 +2,7 @@ import React from 'react';
 import {Form, FormControl, Button} from 'react-bootstrap';
 
 const NavForm = props => {
-  return (
+  const form = (
     <Form inline className="ml-auto">
       <FormControl
         type="text"
@@ -11,7 +11,9 @@ const NavForm = props => {
       />
       <Button variant="outline-success">Search</Button>
     </Form>
-  );
+  )
+  const returnValue = props.isAuthenticated ? form : ""
+  return returnValue;
 };
 
 export default NavForm;

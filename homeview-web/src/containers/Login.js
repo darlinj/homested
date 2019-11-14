@@ -43,7 +43,7 @@ export default class Login extends Component {
   render() {
     return (
       <div className="Login">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} className="login-form">
           <FormGroup controlId="email">
             <FormLabel>Email</FormLabel>
             <FormControl

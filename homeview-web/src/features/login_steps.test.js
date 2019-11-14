@@ -60,7 +60,7 @@ describe('Login', () => {
       await password.simulate('change', {
         target: {value: 'password', id: 'password'},
       });
-      wrapper.find('form').simulate('submit');
+      wrapper.find('form.login-form').simulate('submit');
     });
     expect(Auth.signIn.mock.calls[0][0]).toBe('validuser@bt.com');
     expect(Auth.signIn.mock.calls[0][1]).toBe('password');
