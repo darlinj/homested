@@ -15,6 +15,17 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  findCustomer:
+    handler: handler.findCustomer
+    environment:
+      HDM_USER: ${ssm:HDM_user~true}
+      HDM_PASSWORD: ${ssm:HDM_password~true}
+    events:
+      - http:
+          path: find-customer
+          method: get
+          cors: true
+          authorizer: aws_iam
 resources:
   Resources:
     # Cognito - User pool
