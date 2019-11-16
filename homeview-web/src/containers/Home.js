@@ -12,6 +12,7 @@ const Home = props => {
       <div className="test">
         <h1>Customer details</h1>
         <h2>{props.customerData} </h2>
+        <h2>{JSON.stringify(props.requestParams)} </h2>
       </div>
     );
   }

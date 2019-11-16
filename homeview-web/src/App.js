@@ -11,6 +11,7 @@ import './App.css';
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [customerData, setCustomerData] = useState('');
+  const [requestParams, setRequestParams] = useState({});
 
   useEffect(() => {
     Auth.currentSession()
@@ -34,9 +35,11 @@ const App = props => {
       return;
     }
     setCustomerData("Loading...");
-    API.get('testApiCall', '/hello')
+    console.log(encodeURIComponent(searchTerm));
+    API.get('findCustomer', `/find-customer?searchTerm=${encodeURI(searchTerm)}`)
       .then(response => {
         setCustomerData(response.message + searchTerm);
+        setRequestParams(response.searchTerm);
       })
       .catch(e => {
         console.log(e);
@@ -48,6 +51,7 @@ const App = props => {
     userHasAuthenticated: setAuthenticated,
     getCustomerData: getCustomerData,
     customerData: customerData,
+    requestParams: requestParams,
   };
 
   return (
