@@ -34,19 +34,20 @@ const getCustomer = async searchTerm => {
     .then(function(response) {
       console.log(response);
       const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
-      const errorData =
-        parsedData['requestResponses']['requestResponse']['errorMessage'];
-      const filteredData = parsedData['requestResponses']['requestResponse'][
-        'nameValues'
-      ]
-        .map(nameValuePair => {
-          return {[nameValuePair.name]: nameValuePair.value || ''};
-        })
-        .reduce((r, c) => ({...r, ...c}), {});
+      const responseData = parsedData['requestResponses']['requestResponse'];
+      const errorData = responseData['errorMessage'];
+      let filteredData = {};
+      if (responseData['nameValues']) {
+        filteredData = responseData['nameValues']
+          .map(nameValuePair => {
+            return {[nameValuePair.name]: nameValuePair.value || ''};
+          })
+          .reduce((r, c) => ({...r, ...c}), {});
+      }
       return {result: errorData, data: filteredData};
     })
     .catch(function(error) {
-      console.log(error);
+      console.log("ERROR:", error);
     });
 };
 
