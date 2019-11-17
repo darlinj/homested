@@ -3,6 +3,7 @@ import './Home.css';
 import Login from './Login';
 import {ListGroup, Table, Row, Col, Card, CardDeck} from 'react-bootstrap';
 import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
+import GaugeChart from 'react-gauge-chart';
 
 const Home = props => {
   const renderLander = () => {
@@ -23,11 +24,18 @@ const Home = props => {
                 <Card.Body>
                   <Card.Text>
                     <ListGroup>
-                      <ListGroup.Item><FaCheckCircle color="green" size="32" /> Wireless Status</ListGroup.Item>
-                      <ListGroup.Item><FaMinusCircle color="grey" size="32" /> Hub Status</ListGroup.Item>
-                      <ListGroup.Item><FaTimesCircle color="red" size="32" /> Network Status</ListGroup.Item>
+                      <ListGroup.Item>
+                        <FaCheckCircle color="green" size="32" /> Wireless
+                        Status
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <FaMinusCircle color="grey" size="32" /> Hub Status
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <FaTimesCircle color="red" size="32" /> Network Status
+                      </ListGroup.Item>
                     </ListGroup>
-      (This is not live data)
+                    (This is not live data)
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -37,7 +45,7 @@ const Home = props => {
                   <Table hover size="sm">
                     <tbody>
                       <tr>
-                        <td colspan="2">
+                        <td colSpan="2">
                           {props.customerData.data.deviceTypeAlias}
                         </td>
                       </tr>
@@ -99,6 +107,14 @@ const Home = props => {
                 <Card.Header>BROADBAND SPEED</Card.Header>
                 <Card.Body>
                   <Card.Text>Coming soon...</Card.Text>
+                  <GaugeChart
+                    id="gauge-chart4"
+                    nrOfLevels={10}
+                    arcPadding={0.1}
+                    cornerRadius={3}
+                    percent={0.6}
+                    textColor="black"
+                  />
                 </Card.Body>
               </Card>
               <Card bg="light">
@@ -119,7 +135,7 @@ const Home = props => {
       <>
         {props.customerData
           ? renderCustomerDetails()
-          : 'Please enter the customer telephone number, RBSID or Serial Number of the Hub'}
+          : '' }
       </>
     );
   };

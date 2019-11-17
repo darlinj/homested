@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import Routes from './Routes';
 import {Auth, API} from 'aws-amplify';
 import NavBar from './components/NavBar';
+import GetCustomerForm from './components/GetCustomerForm';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -34,12 +35,17 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
-    setCustomerData("Loading...");
+    setCustomerData('Loading...');
     console.log(encodeURIComponent(searchTerm));
-    API.get('findCustomer', `/find-customer?searchTerm=${encodeURI(searchTerm)}`)
+    API.get(
+      'findCustomer',
+      `/find-customer?searchTerm=${encodeURI(searchTerm)}`,
+    )
       .then(response => {
         console.log(response.message);
-        setCustomerData(JSON.parse(response.message.replace("owfsvc_user","")));
+        setCustomerData(
+          JSON.parse(response.message.replace('owfsvc_user', '')),
+        );
         setRequestParams(response.searchTerm);
       })
       .catch(e => {
@@ -60,6 +66,10 @@ const App = props => {
       <ToastContainer />
       <NavBar
         handleLogout={handleLogout}
+        isAuthenticated={isAuthenticated}
+        getCustomerData={getCustomerData}
+      />
+      <GetCustomerForm
         isAuthenticated={isAuthenticated}
         getCustomerData={getCustomerData}
       />

@@ -1,7 +1,6 @@
 import React from 'react';
 import {Nav, Navbar} from 'react-bootstrap';
 import UserStatus from './UserStatus';
-import NavForm from './NavForm';
 import './NavBar.css';
 
 const NavBar = props => {
@@ -13,7 +12,6 @@ const NavBar = props => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <NavForm isAuthenticated={props.isAuthenticated} getCustomerData={props.getCustomerData} />
         <Nav className="mr-auto"></Nav>
         <Nav>
           <UserStatus
