@@ -38,7 +38,8 @@ const App = props => {
     console.log(encodeURIComponent(searchTerm));
     API.get('findCustomer', `/find-customer?searchTerm=${encodeURI(searchTerm)}`)
       .then(response => {
-        setCustomerData(response.message + searchTerm);
+        console.log(response.message);
+        setCustomerData(JSON.parse(response.message.replace("owfsvc_user","")));
         setRequestParams(response.searchTerm);
       })
       .catch(e => {

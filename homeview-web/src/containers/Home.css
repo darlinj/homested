@@ -11,3 +11,11 @@
 .Home .lander p {
 	color: #999;
 }
+
+.info-card {
+  margin-top: 15px;
+}
+
+.health_good {
+  color: green;
+}
