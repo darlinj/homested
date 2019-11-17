@@ -22,7 +22,6 @@ const buildResponse = event => {
 
 const getCustomer = async searchTerm => {
   const adjustedSearchTerm = searchTerm.replace(/ /g, '+');
-  console.log(adjustedSearchTerm);
   return axios({
     method: 'get',
     auth: {
@@ -32,22 +31,23 @@ const getCustomer = async searchTerm => {
     url: `https://qbtws.qa.motive.com/hdmhomeflow/services/hdmhomeflow/execute/${adjustedSearchTerm}/GATEWAY/HDM.xml?operation=findDeviceById&mode=true&associatedlandevices=true&requestIdentifier=`,
   })
     .then(function(response) {
-      console.log(response);
       const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
       const responseData = parsedData['requestResponses']['requestResponse'];
       const errorData = responseData['errorMessage'];
       let filteredData = {};
       if (responseData['nameValues']) {
-        filteredData = responseData['nameValues']
-          .map(nameValuePair => {
-            return {[nameValuePair.name]: nameValuePair.value || ''};
-          })
-          .reduce((r, c) => ({...r, ...c}), {});
+        filteredData = responseData['nameValues'].reduce(
+          (acc, nameValuePair) => {
+            return {[nameValuePair.name]: nameValuePair.value || '', ...acc};
+          },
+          {},
+        );
       }
       return {result: errorData, data: filteredData};
     })
     .catch(function(error) {
-      console.log("ERROR:", error);
+      console.log('ERROR:', error);
+      return {result: 'ERROR', data: data};
     });
 };
 
