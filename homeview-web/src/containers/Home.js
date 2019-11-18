@@ -22,7 +22,6 @@ const Home = props => {
               <Card bg="light">
                 <Card.Header>HEALTH CHECK</Card.Header>
                 <Card.Body>
-                  <Card.Text>
                     <ListGroup>
                       <ListGroup.Item>
                         <FaCheckCircle color="green" size="32" /> Wireless
@@ -36,7 +35,6 @@ const Home = props => {
                       </ListGroup.Item>
                     </ListGroup>
                     (This is not live data)
-                  </Card.Text>
                 </Card.Body>
               </Card>
               <Card bg="light">

@@ -10,7 +10,7 @@ jest.mock('aws-amplify');
 describe('Login', () => {
   beforeEach(() => {
     Auth.currentSession.mockResolvedValue('success');
-    API.get.mockResolvedValue({message: 'Go Serverless v1.0'});
+    API.get.mockResolvedValue({message: '{"result":"EXECUTE_SUCCESS","data":{"MODE":"DSL","customerType":"ConsumerBB","deviceTypeAlias":"Home Hub 6.0B","modelName":"BT Hub 6B","firstContactTime":"Fri Jan 18 15:27:24 GMT 2019","lastContactTime":"Wed Aug 21 15:17:44 BST 2019"}}'});
   });
 
   afterEach(() => {
@@ -37,6 +37,8 @@ describe('Login', () => {
     await act(async () => {
       wrapper.find('form.search-form').simulate('submit');
     });
-    expect(wrapper.text()).toContain('Go Serverless v1.0customer1234');
+    expect(API.get.mock.calls.length).toEqual(1);
+    expect(API.get.mock.calls[0][0]).toEqual("findCustomer");
+    expect(API.get.mock.calls[0][1]).toEqual("/find-customer?searchTerm=customer1234");
   });
 });

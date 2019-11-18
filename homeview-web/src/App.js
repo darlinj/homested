@@ -36,7 +36,6 @@ const App = props => {
       return;
     }
     setCustomerData('Loading...');
-    console.log(encodeURIComponent(searchTerm));
     API.get(
       'findCustomer',
       `/find-customer?searchTerm=${encodeURI(searchTerm)}`,
