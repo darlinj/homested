@@ -41,7 +41,6 @@ const App = props => {
       `/find-customer?searchTerm=${encodeURI(searchTerm)}`,
     )
       .then(response => {
-        console.log(response.message);
         setCustomerData(
           JSON.parse(response.message.replace('owfsvc_user', '')),
         );
