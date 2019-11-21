@@ -71,7 +71,7 @@ module.exports.findCustomer = async event => {
         message:
           JSON.stringify(
             await getCustomer(event.queryStringParameters.searchTerm),
-          ) + process.env.HDM_USER,
+          ),
         input: event,
         searchTerm: event.queryStringParameters,
       },
