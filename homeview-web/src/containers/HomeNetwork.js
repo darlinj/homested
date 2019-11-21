@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import './HomeNetwork.css';
 import dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
-import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
 
 const HomeNetwork = () => {
   const render = new dagreD3.render();
