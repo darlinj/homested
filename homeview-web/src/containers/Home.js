@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Home.css';
 import Login from './Login';
+import HomeNetwork from './HomeNetwork';
+
 import {
   Tab,
   Tabs,
@@ -15,6 +17,7 @@ import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
 import GaugeChart from 'react-gauge-chart';
 
 const Home = props => {
+  const [rerenderGraph, setRerenderGraph] = useState(false);
   const renderLander = () => {
     return <Login {...props} />;
   };
@@ -25,7 +28,8 @@ const Home = props => {
     }
     return (
       <>
-        <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
+        <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example"
+            onSelect={handleClick}>
           <Tab eventKey="overview" title="Overview">
             <Row>
               <Col>
@@ -139,12 +143,22 @@ const Home = props => {
           <Tab eventKey="health-check" title="Health Check">
             something
           </Tab>
-          <Tab eventKey="home-network" title="Home Network">
-            something
+          <Tab
+            eventKey="home-network"
+            title="Home Network"
+            className="home-network-tab">
+      
+            <HomeNetwork rerenderGraph={rerenderGraph} />
           </Tab>
         </Tabs>
       </>
     );
+  };
+
+  const handleClick = (tab) => {
+    if (rerenderGraph === false && tab === "home-network") {
+      setRerenderGraph(true);
+    }
   };
 
   const renderMain = () => {
