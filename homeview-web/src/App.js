@@ -42,7 +42,7 @@ const App = props => {
     )
       .then(response => {
         setCustomerData(
-          JSON.parse(response.message.replace('owfsvc_user', '')),
+          JSON.parse(response.message),
         );
         setRequestParams(response.searchTerm);
       })
