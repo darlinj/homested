@@ -2,7 +2,7 @@
 const axios = require('axios');
 var parser = require('fast-xml-parser');
 
-const getCustomer = async searchTerm => {
+const makeHDMRequest = async(searchTerm, operation_params) => {
   const adjustedSearchTerm = searchTerm.replace(/ /g, '+');
   return axios({
     method: 'get',
@@ -10,7 +10,7 @@ const getCustomer = async searchTerm => {
       username: process.env.HDM_USER,
       password: process.env.HDM_PASSWORD,
     },
-    url: `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}`,
+    url: `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}${operation_params}`,
   })
     .then(function(response) {
       const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
@@ -33,7 +33,7 @@ const getCustomer = async searchTerm => {
     });
 };
 
-module.exports.findCustomer = async event => {
+const logEvent = (event) => {
   console.info('EVENT\n' + JSON.stringify(event, null, 2));
   console.info(
     'SEARCHTERM\n' +
@@ -43,6 +43,9 @@ module.exports.findCustomer = async event => {
         2,
       ),
   );
+}
+
+const getResponse = async (searchTerm, operation) => {
   return {
     statusCode: 200,
     headers: {
@@ -50,40 +53,21 @@ module.exports.findCustomer = async event => {
     },
     body: JSON.stringify(
       {
-        message: await getCustomer(event.queryStringParameters.searchTerm),
-        input: event,
-        searchTerm: event.queryStringParameters,
+        message: await makeHDMRequest(searchTerm, operation)
       },
       null,
       2,
     ),
   };
+}
+
+module.exports.findCustomer = async event => {
+  logEvent(event);
+  return getResponse(event.queryStringParameters.searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
 };
 
 module.exports.diagnosticTest = async event => {
-  console.info('EVENT\n' + JSON.stringify(event, null, 2));
-  console.info(
-    'SEARCHTERM\n' +
-      JSON.stringify(
-        event.queryStringParameters.searchTerm.replace(' ', '+'),
-        null,
-        2,
-      ),
-  );
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    body: JSON.stringify(
-      {
-        message: await getCustomer(event.queryStringParameters.searchTerm),
-        input: event,
-        searchTerm: event.queryStringParameters,
-      },
-      null,
-      2,
-    ),
-  };
+  logEvent(event);
+  return getResponse(event.queryStringParameters.searchTerm, "operation=diagnosticTest&TestName=selfTest");
 };
 
