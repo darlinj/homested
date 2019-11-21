@@ -2,31 +2,46 @@ import React, {useEffect} from 'react';
 import './HomeNetwork.css';
 import dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
+import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
 
 const HomeNetwork = () => {
   const render = new dagreD3.render();
   var g = new dagreD3.graphlib.Graph()
-    .setGraph({})
+    .setGraph({rankdir:"LR"})
     .setDefaultEdgeLabel(function() {
       return {};
     });
 
+  const addNode = (graph, id, label, icon) => {
+  var html = "<div class=device>";
+      html += '<i class="fa fa-' + icon + '" style="font-size:25px;color:grey;" ></i>';
+      html += "<span class=device-label>"+ label + "</span>";
+      html += "</div>";
+      graph.setNode(id, {
+        labelType: "html",
+        label: html,
+        rx: 5,
+        ry: 5,
+        padding: 0,
+        class: 'type-TOP'
+      });
+  }
   useEffect(() => {
-    g.setNode(0, {label: 'BT network', class: 'type-TOP'});
-    g.setNode(1, {label: 'BT home hub', class: 'type-S'});
-    g.setNode(2, {label: '2.4GHz Wifi', class: 'type-NP'});
-    g.setNode(5, {label: '5 GHz Wifi', class: 'type-DT'});
-    g.setNode(13, {label: 'Ethernet', class: 'type-TK'});
-    g.setNode(3, {label: 'Some Mac book', class: 'type-VP'});
-    g.setNode(6, {label: 'Some PC', class: 'type-VBZ'});
-    g.setNode(7, {label: 'Some phone', class: 'type-TK'});
-    g.setNode(8, {label: 'Another phone', class: 'type-NP'});
-    g.setNode(9, {label: 'Alexa', class: 'type-DT'});
-    g.setNode(10, {label: 'Sono hub', class: 'type-TK'});
-    g.setNode(11, {label: 'Wifi extender disk', class: 'type-NN'});
-    g.setNode(12, {label: 'Sonos speaker', class: 'type-TK'});
-    g.setNode(4, {label: 'some Android device', class: 'type-.'});
-    g.setNode(14, {label: 'door bell', class: 'type-TK'});
+    addNode(g, 0, 'BT network', "globe");
+    addNode(g, 1, 'BT home hub', "globe");
+    addNode(g, 2, '2.4GHz Wifi', "wifi");
+    addNode(g, 5, '5 GHz Wifi', "wifi");
+    addNode(g, 13, 'Ethernet', "plug");
+    addNode(g, 3, 'Some Mac book', "laptop");
+    addNode(g, 6, 'Some PC', "laptop");
+    addNode(g, 7, 'Some phone', "mobile");
+    addNode(g, 8, 'Another phone', "mobile");
+    addNode(g, 9, 'Alexa', "microphone");
+    addNode(g, 10, 'Sono hub', "music");
+    addNode(g, 11, 'Wifi extender disk', "wifi");
+    addNode(g, 12, 'Sonos speaker', "music");
+    addNode(g, 4, 'some Android device', "mobile");
+    addNode(g, 14, 'door bell', "bell");
 
     g.nodes().forEach(function(v) {
       var node = g.node(v);
@@ -40,15 +55,15 @@ const HomeNetwork = () => {
     g.setEdge(1, 2, {arrowhead: 'noArrow', curve: d3.curveBasis});
     g.setEdge(6, 7, {arrowhead: 'noArrow', curve: d3.curveBasis});
     g.setEdge(5, 6, {arrowhead: 'noArrow', curve: d3.curveBasis});
-    g.setEdge(9, 10, {arrowhead: 'undirected'});
-    g.setEdge(8, 9, {arrowhead: 'undirected'});
-    g.setEdge(11, 12, {arrowhead: 'undirected'});
-    g.setEdge(8, 11, {arrowhead: 'undirected'});
-    g.setEdge(5, 8, {arrowhead: 'undirected'});
-    g.setEdge(1, 5, {arrowhead: 'undirected'});
-    g.setEdge(13, 14, {arrowhead: 'undirected'});
-    g.setEdge(1, 13, {arrowhead: 'undirected'});
-    g.setEdge(0, 1, {arrowhead: 'undirected'});
+    g.setEdge(9, 10,{arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(8, 9, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(11, 12, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(8, 11, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(5, 8, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(1, 5, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(13, 14, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(1, 13, {arrowhead: 'noArrow', curve: d3.curveBasis});
+    g.setEdge(0, 1, {arrowhead: 'noArrow', curve: d3.curveBasis});
 
     renderGraph();
   });
@@ -67,7 +82,6 @@ const HomeNetwork = () => {
 
   return (
     <div>
-      <h1>graph</h1>
       <svg className="home-network" height="100%" width="100%">
         <g className="svgGroup" />{' '}
       </svg>
