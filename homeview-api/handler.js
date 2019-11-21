@@ -2,24 +2,6 @@
 const axios = require('axios');
 var parser = require('fast-xml-parser');
 
-module.exports.hello = async event => {
-  const foo = getCustomer('1234');
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    body: JSON.stringify(foo, null, 2),
-  };
-};
-
-const buildResponse = event => {
-  return {
-    message: 'Go Serverless v1.0! Your function executed successfully!',
-    input: event,
-  };
-};
-
 const getCustomer = async searchTerm => {
   const adjustedSearchTerm = searchTerm.replace(/ /g, '+');
   return axios({
@@ -28,7 +10,7 @@ const getCustomer = async searchTerm => {
       username: process.env.HDM_USER,
       password: process.env.HDM_PASSWORD,
     },
-    url: `https://qbtws.qa.motive.com/hdmhomeflow/services/hdmhomeflow/execute/${adjustedSearchTerm}/GATEWAY/HDM.xml?operation=findDeviceById&mode=true&associatedlandevices=true&requestIdentifier=`,
+    url: `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}`,
   })
     .then(function(response) {
       const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
@@ -68,10 +50,7 @@ module.exports.findCustomer = async event => {
     },
     body: JSON.stringify(
       {
-        message:
-          JSON.stringify(
-            await getCustomer(event.queryStringParameters.searchTerm),
-          ),
+        message: await getCustomer(event.queryStringParameters.searchTerm),
         input: event,
         searchTerm: event.queryStringParameters,
       },
@@ -81,5 +60,30 @@ module.exports.findCustomer = async event => {
   };
 };
 
-module.exports.buildResponse = buildResponse;
-module.exports.getCustomer = getCustomer;
+module.exports.diagnosticTest = async event => {
+  console.info('EVENT\n' + JSON.stringify(event, null, 2));
+  console.info(
+    'SEARCHTERM\n' +
+      JSON.stringify(
+        event.queryStringParameters.searchTerm.replace(' ', '+'),
+        null,
+        2,
+      ),
+  );
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify(
+      {
+        message: await getCustomer(event.queryStringParameters.searchTerm),
+        input: event,
+        searchTerm: event.queryStringParameters,
+      },
+      null,
+      2,
+    ),
+  };
+};
+
