@@ -15,6 +15,19 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  getDiagnostics:
+    handler: handler.getDiagnostics
+    environment:
+      HDM_USER: ${ssm:HDM_user~true}
+      HDM_PASSWORD: ${ssm:HDM_password~true}
+      HDM_URL_PART1: ${ssm:HDM_url_part1~true}
+      HDM_URL_PART2: ${ssm:HDM_url_part2~true}
+    events:
+      - http:
+          path: get-diagnostics
+          method: get
+          cors: true
+          authorizer: aws_iam
   findCustomer:
     handler: handler.findCustomer
     environment:

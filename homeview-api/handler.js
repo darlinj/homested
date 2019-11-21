@@ -66,7 +66,7 @@ module.exports.findCustomer = async event => {
   return getResponse(event.queryStringParameters.searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
 };
 
-module.exports.diagnosticTest = async event => {
+module.exports.getDiagnostics = async event => {
   logEvent(event);
   return getResponse(event.queryStringParameters.searchTerm, "operation=diagnosticTest&TestName=selfTest");
 };

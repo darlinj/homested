@@ -48,7 +48,7 @@ describe('finding the customer', () => {
       data: {key1: 'value1', key2: 'value2'},
     };
     return handler
-      .diagnosticTest({
+      .getDiagnostics({
         queryStringParameters: {searchTerm: ' 088044 1801004390'},
       })
       .then(data => {
