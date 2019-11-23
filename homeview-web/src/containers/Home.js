@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './Home.css';
 import Login from './Login';
 import HomeNetwork from './HomeNetwork';
+import HealthCheck from './HealthCheck';
 import CustomerSummary from '../components/CustomerSummary';
 
 import {Tab, Tabs} from 'react-bootstrap';
@@ -26,7 +27,7 @@ const Home = props => {
             <CustomerSummary customerData={props.customerData} />
           </Tab>
           <Tab eventKey="health-check" title="Health Check">
-            something
+            <HealthCheck diagnosticData={props.diagnosticData} />
           </Tab>
           <Tab
             eventKey="home-network"

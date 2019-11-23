@@ -12,6 +12,7 @@ import './App.css';
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [customerData, setCustomerData] = useState('');
+  const [diagnosticData, setDiagnosticData] = useState({});
   const [requestParams, setRequestParams] = useState({});
 
   useEffect(() => {
@@ -37,12 +38,33 @@ const App = props => {
     }
     setCustomerData('Loading...');
     API.get(
-      'findCustomer',
+      'homeviewAPI',
       `/find-customer?searchTerm=${encodeURI(searchTerm)}`,
     )
       .then(response => {
         setCustomerData(
-          JSON.parse(response.message),
+          response.message
+        );
+        setRequestParams(response.searchTerm);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    getDiagnosticData(searchTerm);
+  };
+
+  const getDiagnosticData = searchTerm => {
+    if (!isAuthenticated) {
+      return;
+    }
+    setDiagnosticData('Loading...');
+    API.get(
+      'homeviewAPI',
+      `/get-diagnostics?searchTerm=${encodeURI(searchTerm)}`,
+    )
+      .then(response => {
+        setDiagnosticData(
+          response.message
         );
         setRequestParams(response.searchTerm);
       })
@@ -55,7 +77,9 @@ const App = props => {
     isAuthenticated: isAuthenticated,
     userHasAuthenticated: setAuthenticated,
     getCustomerData: getCustomerData,
+    getDiagnosticData: getDiagnosticData,
     customerData: customerData,
+    diagnosticData: diagnosticData,
     requestParams: requestParams,
   };
 

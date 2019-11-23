@@ -18,7 +18,7 @@ amplify.configure({
   API: {
     endpoints: [
       {
-        name: 'findCustomer',
+        name: 'homeviewAPI',
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION
       }
