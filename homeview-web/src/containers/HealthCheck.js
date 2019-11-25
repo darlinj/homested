@@ -1,13 +1,19 @@
 import React from 'react';
 import {ListGroup, Row, Col, Card, CardDeck} from 'react-bootstrap';
-import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
+import './HealthCheck.css';
+import {
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaMinusCircle,
+  FaTimesCircle,
+} from 'react-icons/fa';
 
 const listDiagnostics = diags => {
   return (
     <ListGroup>
       {Object.keys(diags).map(key => {
         return (
-          <ListGroup.Item>
+          <ListGroup.Item key={key}>
             <strong>{key}</strong>: {diags[key]}
           </ListGroup.Item>
         );
@@ -20,49 +26,82 @@ const displayDiagnostics = diags => {
   return (
     <>
       <Row>
-        <CardDeck className="info-card" style={{width: '100%'}}>
-          <Card bg="light">
-            <Card.Header>Wireless status</Card.Header>
-            <Row>
-              <Col md="auto" style={{width: '50%'}}>
-                <h3>Wireless 2.4GHz Networks</h3>
-                <ListGroup>
-                  <ListGroup.Item>
-                    {healthIcon(diags.Self_Test_Wireless_Networks_Detected)}
-                    {diags.Self_Test_Wireless_Networks_Detected_Details}
-                    {diags.Self_Test_Wireless_Networks_Detected}
-                  </ListGroup.Item>
-                </ListGroup>
-              </Col>
-
-              <Col md="auto">Wireless 5GHz Networks</Col>
-            </Row>
-          </Card>
-        </CardDeck>
+        <Col>
+          <CardDeck className="info-card">
+            <Card bg="light">
+              <Card.Header>Wireless status</Card.Header>
+              <Row>
+                <Col md="auto" style={{width: '50%'}}>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      <strong>Wireless 2.4GHz Networks</strong>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {healthIcon(diags.Self_Test_Wireless_Networks_Detected)}
+                      {diags.Self_Test_Wireless_Networks_Detected_Details}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {healthIcon(diags.Self_Test_Wireless_Contention)}
+                      {diags.Self_Test_Wireless_Contention_Details}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+                <Col md="auto" style={{width: '50%'}}>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      <strong>Wireless 5GHz Networks</strong>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {healthIcon(
+                        diags.Self_Test_Wireless_Networks_Detected_5GHz,
+                      )}
+                      {diags.Self_Test_Wireless_Networks_Detected_5GHz_Details}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {healthIcon(diags.Self_Test_Wireless_Contention_5GHz)}
+                      {diags.Self_Test_Wireless_Contention_5GHz_Details}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+              </Row>
+            </Card>
+          </CardDeck>
+        </Col>
       </Row>
       <Row>
-        <CardDeck className="info-card">
-          <Card bg="light">
-            <Card.Header>all keys</Card.Header>
-            <Card.Body>{listDiagnostics(diags)}</Card.Body>
-          </Card>
-        </CardDeck>
+        <Col>
+          <CardDeck className="info-card">
+            <Card bg="light">
+              <Card.Header>All other status info</Card.Header>
+              <Card.Body>{listDiagnostics(diags)}</Card.Body>
+            </Card>
+          </CardDeck>
+        </Col>
       </Row>
     </>
   );
 };
 
 const healthIcon = color => {
-  let icon = <FaMinusCircle color="grey" size="32" />;
-  if (color === 'Green') {
-    icon = <FaCheckCircle color="green" size="32" />;
-  } else {
-    icon = <FaTimesCircle color="red" size="32" />;
+  if (!color) {
+    return <FaMinusCircle color="grey" size="32" />;
   }
-  return <> {icon} </>;
+  if (color.toLowerCase() === 'red') {
+    return <FaTimesCircle className="red-cross" color="red" size="32" />;
+  }
+  if (color.toLowerCase() === 'amber') {
+    return <FaExclamationTriangle className="amber" color="orange" size="32" />;
+  }
+  if (color.toLowerCase() === 'green') {
+    return <FaCheckCircle className="green-tick" color="green" size="32" />;
+  }
+  return <FaMinusCircle className="grey-minus" color="grey" size="32" />;
 };
 
 const HealthCheck = props => {
+  if (props.diagnosticData.result === undefined) {
+    return <h3>Loading...</h3>;
+  }
   const response = props.diagnosticData || {};
   let healthCheckPage = 'Loading...';
   if (
@@ -71,7 +110,7 @@ const HealthCheck = props => {
   ) {
     healthCheckPage = displayDiagnostics(props.diagnosticData.data || {});
   } else {
-    healthCheckPage = <h2>Data failed to load {response.result}</h2>;
+    healthCheckPage = <h2>Data failed to load. Error: {response.result}</h2>;
   }
   return <>{healthCheckPage}</>;
 };

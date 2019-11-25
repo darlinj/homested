@@ -1,0 +1,5 @@
+.red-cross, .green-tick, .amber, .grey-minus {
+  float: left;
+  margin-right: 1em;
+}
+

@@ -57,12 +57,12 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
-    setDiagnosticData('Loading...');
     API.get(
       'homeviewAPI',
       `/get-diagnostics?searchTerm=${encodeURI(searchTerm)}`,
     )
       .then(response => {
+        console.log(response);
         setDiagnosticData(
           response.message
         );
