@@ -3,8 +3,6 @@ import {mount} from 'enzyme';
 import {MemoryRouter} from 'react-router-dom';
 import App from '../App';
 import {Auth, API} from 'aws-amplify';
-import GaugeChart from 'react-gauge-chart';
-import HomeNetwork from '../containers/HomeNetwork';
 import {act} from 'react-dom/test-utils';
 
 jest.mock('aws-amplify');

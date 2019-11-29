@@ -62,7 +62,6 @@ const App = props => {
       `/get-diagnostics?searchTerm=${encodeURI(searchTerm)}`,
     )
       .then(response => {
-        console.log(response);
         setDiagnosticData(
           response.message
         );

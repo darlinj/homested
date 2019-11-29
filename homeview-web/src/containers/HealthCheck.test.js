@@ -7,7 +7,7 @@ configure({adapter: new Adapter()});
 
 describe('The healthcheck container', () => {
   it('Shows it is loading when rendered', () => {
-    const home = shallow(<HealthCheck />);
+    const home = shallow(<HealthCheck diagnosticData={{result: 'Loading...'}}/>);
     expect(home.text()).toContain('Loading...');
   });
 
