@@ -4,6 +4,7 @@ var parser = require('fast-xml-parser');
 
 const makeHDMRequest = async(searchTerm, operation_params) => {
   const adjustedSearchTerm = searchTerm.replace(/ /g, '+');
+  console.info('URL', `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}${operation_params}`)
   return axios({
     method: 'get',
     auth: {
@@ -13,6 +14,7 @@ const makeHDMRequest = async(searchTerm, operation_params) => {
     url: `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}${operation_params}`,
   })
     .then(function(response) {
+      console.log('RESPONSE:', response.data);
       const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
       const responseData = parsedData['requestResponses']['requestResponse'];
       const errorData = responseData['errorMessage'];
@@ -63,11 +65,11 @@ const getResponse = async (searchTerm, operation) => {
 
 module.exports.findCustomer = async event => {
   logEvent(event);
-  return getResponse(event.queryStringParameters.searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
+  return await getResponse(event.queryStringParameters.searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
 };
 
 module.exports.getDiagnostics = async event => {
   logEvent(event);
-  return getResponse(event.queryStringParameters.searchTerm, "operation=diagnosticTest&TestName=selfTest");
+  return await getResponse(event.queryStringParameters.searchTerm, "operation=diagnosticTest&TestName=selfTest");
 };
 

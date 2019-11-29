@@ -49,9 +49,28 @@ describe('finding the customer', () => {
     };
     return handler
       .getDiagnostics({
-        queryStringParameters: {searchTerm: ' 088044 1801004390'},
+        queryStringParameters: {searchTerm: '+084316+NQ62055767'},
       })
-      .then(data => {
+     .then(data => {
+        expect(axios.mock.calls[0][0].url).toMatch(/operation=diagnosticTest&TestName=selfTest/);
+        expect(JSON.parse(data.body).message).toEqual(jsonResult);
+      });
+  });
+
+  it('gets diagnostic data from an offline hub', () => {
+    jest.setTimeout(30000);
+    const apiResponse =
+      '<?xml version="1.0" encoding="UTF-8"?><ns1:requestResponses xmlns:ns1="http://homeflow.hdmservice.motive.com/"><ns1:requestResponse xmlns:ns1="http://homeflow.hdmservice.motive.com/"><errorCode>0</errorCode><errorMessage>CR_FAILED</errorMessage><uniqueId>+088044+1801004390</uniqueId></ns1:requestResponse></ns1:requestResponses>';
+    axios.mockResolvedValue({data: apiResponse});
+    const jsonResult = {
+      result: 'CR_FAILED',
+      data: {},
+    };
+    return handler
+      .getDiagnostics({
+        queryStringParameters: {searchTerm: '+088044+1801004390'},
+      })
+     .then(data => {
         expect(axios.mock.calls[0][0].url).toMatch(/operation=diagnosticTest&TestName=selfTest/);
         expect(JSON.parse(data.body).message).toEqual(jsonResult);
       });
