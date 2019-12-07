@@ -68,16 +68,7 @@ const displayDiagnostics = diags => {
           </CardDeck>
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <CardDeck className="info-card">
-            <Card bg="light">
-              <Card.Header>All other status info</Card.Header>
-              <Card.Body>{listDiagnostics(diags)}</Card.Body>
-            </Card>
-          </CardDeck>
-        </Col>
-      </Row>
+      {card('All other status info', listDiagnostics(diags))}
     </>
   );
 };
@@ -98,21 +89,42 @@ const healthIcon = color => {
   return <FaMinusCircle className="grey-minus" color="grey" size="32" />;
 };
 
+const card = (title, body) => {
+  return (
+    <Row>
+      <Col>
+        <CardDeck className="info-card">
+          <Card bg="light">
+            <Card.Header>{title}</Card.Header>
+            <Card.Body>{body}</Card.Body>
+          </Card>
+        </CardDeck>
+      </Col>
+    </Row>
+  );
+};
+
+const loadingPage = () => {
+  return card('Healthcheck', 'Loading...');
+};
+
+const failedToGetData = error => {
+  const failureBody = <div>Data failed to load. Error: {error}</div>;
+  return card('Healthcheck - Load failure', failureBody);
+};
+
 const HealthCheck = props => {
-  if (props.diagnosticData.result === undefined) {
-    return <h3>Loading...</h3>;
+  if (props.diagnosticData.status === 'loading') {
+    return loadingPage();
   }
   const response = props.diagnosticData || {};
-  let healthCheckPage = 'Loading...';
   if (
     response.result === 'TEST_COMPLETED_CACHE' ||
     response.result === 'TEST_COMPLETED_LIVE'
   ) {
-    healthCheckPage = displayDiagnostics(props.diagnosticData.data || {});
-  } else {
-    healthCheckPage = <h2>Data failed to load. Error: {response.result}</h2>;
+    return displayDiagnostics(props.diagnosticData.data || {});
   }
-  return <>{healthCheckPage}</>;
+  return failedToGetData(response.result);
 };
 
 export default HealthCheck;
