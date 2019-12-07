@@ -21,7 +21,7 @@ const Home = props => {
           id="uncontrolled-tab-example"
           onSelect={handleClick}>
           <Tab eventKey="overview" title="Overview">
-            <CustomerSummary customerData={props.customerData} />
+            <CustomerSummary diagnosticData={props.diagnosticData} customerData={props.customerData} />
           </Tab>
           <Tab eventKey="health-check" title="Health Check">
             <HealthCheck diagnosticData={props.diagnosticData} />

@@ -11,8 +11,8 @@ import './App.css';
 
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [customerData, setCustomerData] = useState({loading: true});
-  const [diagnosticData, setDiagnosticData] = useState({});
+  const [customerData, setCustomerData] = useState({state: 'initialized'});
+  const [diagnosticData, setDiagnosticData] = useState({state: 'initialized'});
   const [requestParams, setRequestParams] = useState({});
 
   useEffect(() => {
@@ -36,15 +36,10 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
-    setCustomerData({loading: true});
-    API.get(
-      'homeviewAPI',
-      `/find-customer?searchTerm=${encodeURI(searchTerm)}`,
-    )
+    setCustomerData({state: 'loading'});
+    API.get('homeviewAPI', `/find-customer?searchTerm=${encodeURI(searchTerm)}`)
       .then(response => {
-        setCustomerData(
-          response.message
-        );
+        setCustomerData({...response.message, state: 'loaded'});
         setRequestParams(response.searchTerm);
       })
       .catch(e => {
@@ -57,14 +52,13 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
+    setDiagnosticData({state: 'loading'});
     API.get(
       'homeviewAPI',
       `/get-diagnostics?searchTerm=${encodeURI(searchTerm)}`,
     )
       .then(response => {
-        setDiagnosticData(
-          response.message
-        );
+        setDiagnosticData({...response.message, state: 'loaded'});
         setRequestParams(response.searchTerm);
       })
       .catch(e => {

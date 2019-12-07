@@ -1,19 +1,17 @@
 import React from 'react';
-import {ListGroup, Row, Col, Card, CardDeck} from 'react-bootstrap';
+import {Row, Col, Card, CardDeck} from 'react-bootstrap';
 import HubSummary from './HubSummary';
+import HealthCheck from './HealthCheck';
 import {
   FaSpinner,
-  FaCheckCircle,
-  FaMinusCircle,
-  FaTimesCircle,
 } from 'react-icons/fa';
 import GaugeChart from 'react-gauge-chart';
 
-const loadingSpinner = (loading, spinnerClass) => {
-  if (loading) {
+const loadingSpinner = (state, spinnerClass) => {
+  if (state !== 'initialized') {
     return (
       <FaSpinner
-        className={`fa-spin ${spinnerClass}`}
+        className={`${state === 'loading' ? 'fa-spin' : ''} ${spinnerClass}`}
         style={{float: 'right'}}
         color="black"
         size="32"
@@ -29,34 +27,31 @@ const CustomerSummary = props => {
         <Col>
           <CardDeck className="info-card">
             <Card bg="light">
-              <Card.Header>HEALTH CHECK</Card.Header>
+              <Card.Header>
+                HEALTH CHECK
+                {loadingSpinner(props.diagnosticData.state, 'health-check')}
+              </Card.Header>
               <Card.Body>
-                <ListGroup>
-                  <ListGroup.Item>
-                    <FaCheckCircle color="green" size="32" /> Wireless Status
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <FaMinusCircle color="grey" size="32" /> Hub Status
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <FaTimesCircle color="red" size="32" /> Network Status
-                  </ListGroup.Item>
-                </ListGroup>
-                (This is not live data)
+                <HealthCheck diagnosticData={props.diagnosticData} />
               </Card.Body>
             </Card>
             <Card bg="light">
               <Card.Header>
-                HUB SUMMARY {loadingSpinner(props.customerData.loading, "hub-summary")}
+                HUB SUMMARY{' '}
+                {loadingSpinner(props.customerData.state, 'hub-summary')}
               </Card.Header>
-              <HubSummary customerData={props.customerData} />
-              <Card.Body></Card.Body>
+              <Card.Body>
+                <HubSummary customerData={props.customerData} />
+              </Card.Body>
             </Card>
             <Card bg="light">
-              <Card.Header>SET-TOP BOX SUMMARY</Card.Header>
+              <Card.Header>
+                SET-TOP BOX SUMMARY
+                {loadingSpinner(props.customerData.state, 'set-top-box')}
+              </Card.Header>
               <Card.Body>
                 <Card.Text>
-                  No set top box associated with this customer
+                  Coming soon...
                 </Card.Text>
               </Card.Body>
             </Card>

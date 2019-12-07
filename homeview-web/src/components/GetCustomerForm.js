@@ -25,7 +25,7 @@ const GetCustomerForm = props => {
     return (
       <Row>
         <Col style={{textAlign: 'center'}}>
-          <Form inline className="ml-auto search-form justify-content-center" onSubmit={handleSubmit}>
+          <Form inline style={{marginTop: "10px"}} className="ml-auto search-form justify-content-center" onSubmit={handleSubmit}>
             <FormGroup controlId="search-term">
               <FormLabel>Search : </FormLabel>
               <FormControl
@@ -41,8 +41,8 @@ const GetCustomerForm = props => {
               Go
             </Button>
           </Form>
-          'Please enter the customer telephone number, RBSID or Serial Number of
-          the Hub'
+          Please enter the customer telephone number, RBSID or Serial Number of
+          the Hub
         </Col>
       </Row>
     );
