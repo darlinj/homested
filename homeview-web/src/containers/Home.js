@@ -14,9 +14,6 @@ const Home = props => {
   };
 
   const renderCustomerDetails = () => {
-    if (props.customerData === 'Loading...') {
-      return <h2>Loading...</h2>;
-    }
     return (
       <>
         <Tabs

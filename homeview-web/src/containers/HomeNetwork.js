@@ -3,7 +3,7 @@ import './HomeNetwork.css';
 import dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
 
-const HomeNetwork = () => {
+const HomeNetwork = props => {
   const render = new dagreD3.render();
   var g = new dagreD3.graphlib.Graph()
     .setGraph({rankdir: 'LR'})
@@ -45,11 +45,9 @@ const HomeNetwork = () => {
 
     g.nodes().forEach(function(v) {
       var node = g.node(v);
-      // Round the corners of the nodes
       node.rx = node.ry = 5;
     });
 
-    // Set up edges, no special attributes.
     g.setEdge(3, 4, {arrowhead: 'noArrow', curve: d3.curveBasis});
     g.setEdge(2, 3, {arrowhead: 'noArrow', curve: d3.curveBasis});
     g.setEdge(1, 2, {arrowhead: 'noArrow', curve: d3.curveBasis});
@@ -72,6 +70,10 @@ const HomeNetwork = () => {
     var svg = d3.select('.home-network'),
       svgGroup = svg.select('.svgGroup');
 
+    if (svg === null || svgGroup === null) {
+      return;
+    }
+
     var zoom = d3.zoom().on('zoom', function() {
       svgGroup.attr('transform', d3.event.transform);
     });
@@ -80,8 +82,7 @@ const HomeNetwork = () => {
     render.arrows().noArrow = function normal(parent, id, edge, type) {};
 
     render(d3.select('.home-network g'), g);
-    var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+    svgGroup.attr('transform', 'translate(10, 20)');
     svg.attr('height', g.graph().height + 40);
   };
 

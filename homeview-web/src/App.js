@@ -11,7 +11,7 @@ import './App.css';
 
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [customerData, setCustomerData] = useState('');
+  const [customerData, setCustomerData] = useState({loading: true});
   const [diagnosticData, setDiagnosticData] = useState({});
   const [requestParams, setRequestParams] = useState({});
 
@@ -36,7 +36,7 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
-    setCustomerData('Loading...');
+    setCustomerData({loading: true});
     API.get(
       'homeviewAPI',
       `/find-customer?searchTerm=${encodeURI(searchTerm)}`,

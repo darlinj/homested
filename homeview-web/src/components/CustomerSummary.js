@@ -1,8 +1,26 @@
 import React from 'react';
 import {ListGroup, Row, Col, Card, CardDeck} from 'react-bootstrap';
 import HubSummary from './HubSummary';
-import {FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
+import {
+  FaSpinner,
+  FaCheckCircle,
+  FaMinusCircle,
+  FaTimesCircle,
+} from 'react-icons/fa';
 import GaugeChart from 'react-gauge-chart';
+
+const loadingSpinner = (loading, spinnerClass) => {
+  if (loading) {
+    return (
+      <FaSpinner
+        className={`fa-spin ${spinnerClass}`}
+        style={{float: 'right'}}
+        color="black"
+        size="32"
+      />
+    );
+  }
+};
 
 const CustomerSummary = props => {
   return (
@@ -28,7 +46,9 @@ const CustomerSummary = props => {
               </Card.Body>
             </Card>
             <Card bg="light">
-              <Card.Header>HUB SUMMARY</Card.Header>
+              <Card.Header>
+                HUB SUMMARY {loadingSpinner(props.customerData.loading, "hub-summary")}
+              </Card.Header>
               <HubSummary customerData={props.customerData} />
               <Card.Body></Card.Body>
             </Card>

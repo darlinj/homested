@@ -2,6 +2,9 @@ import React from 'react';
 import {ListGroup} from 'react-bootstrap';
 
 const HubSummary = props => {
+  if( props.customerData.loading ) {
+    return <div>"Loading"</div>
+  }
   return (
     <ListGroup>
       <ListGroup.Item>

@@ -10,6 +10,7 @@ import {Auth, API} from 'aws-amplify';
 import {act} from 'react-dom/test-utils';
 
 jest.mock('aws-amplify');
+jest.mock('react-gauge-chart' , () => ()=> <div id="gauge">mockGauge</div>);
 
 configure({adapter: new Adapter()});
 
