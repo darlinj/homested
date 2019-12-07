@@ -7,6 +7,7 @@ import {
   FaMinusCircle,
   FaTimesCircle,
 } from 'react-icons/fa';
+import WideCard from '../components/WideCard.js';
 
 const listDiagnostics = diags => {
   return (
@@ -68,7 +69,7 @@ const displayDiagnostics = diags => {
           </CardDeck>
         </Col>
       </Row>
-      {card('All other status info', listDiagnostics(diags))}
+      <WideCard title='All other status info' body={listDiagnostics(diags)} />
     </>
   );
 };
@@ -89,28 +90,13 @@ const healthIcon = color => {
   return <FaMinusCircle className="grey-minus" color="grey" size="32" />;
 };
 
-const card = (title, body) => {
-  return (
-    <Row>
-      <Col>
-        <CardDeck className="info-card">
-          <Card bg="light">
-            <Card.Header>{title}</Card.Header>
-            <Card.Body>{body}</Card.Body>
-          </Card>
-        </CardDeck>
-      </Col>
-    </Row>
-  );
-};
-
 const loadingPage = () => {
-  return card('Healthcheck', 'Loading...');
+  return <WideCard title='Healthcheck' body='Loading...' />
 };
 
 const failedToGetData = error => {
-  const failureBody = <div>Data failed to load. Error: {error}</div>;
-  return card('Healthcheck - Load failure', failureBody);
+  const failureBody = `Data failed to load. Error: ${error}`;
+  return <WideCard title='Healthcheck - Load failure' body={failureBody} />
 };
 
 const HealthCheck = props => {
