@@ -100,7 +100,7 @@ const failedToGetData = error => {
 };
 
 const HealthCheck = props => {
-  if (props.diagnosticData.status === 'loading') {
+  if (props.diagnosticData.state === 'loading') {
     return loadingPage();
   }
   const response = props.diagnosticData || {};

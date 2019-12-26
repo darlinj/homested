@@ -1,6 +1,11 @@
 import React from 'react';
 import {ListGroup} from 'react-bootstrap';
-import {FaExclamationTriangle, FaCheckCircle, FaMinusCircle, FaTimesCircle} from 'react-icons/fa';
+import {
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaMinusCircle,
+  FaTimesCircle,
+} from 'react-icons/fa';
 
 const HealthCheck = props => {
   if (props.diagnosticData.state === 'initialized') {
@@ -9,6 +14,17 @@ const HealthCheck = props => {
   if (props.diagnosticData.state === 'loading') {
     return <div>Loading...</div>;
   }
+
+  if (!props.diagnosticData.data) {
+    return (
+      <ListGroup>
+        <ListGroup.Item>
+          <FaMinusCircle className="grey-minus" color="grey" size="32" /> This infomation was not available
+        </ListGroup.Item>
+      </ListGroup>
+    );
+  }
+
   const healthIcon = color => {
     if (!color) {
       return <FaMinusCircle color="grey" size="32" />;
@@ -30,7 +46,9 @@ const HealthCheck = props => {
   return (
     <ListGroup>
       <ListGroup.Item>
-        {healthIcon(props.diagnosticData.data.Self_Test_Wireless_Contention_5GHz)}
+        {healthIcon(
+          props.diagnosticData.data.Self_Test_Wireless_Contention_5GHz,
+        )}
         Wireless Status
       </ListGroup.Item>
       <ListGroup.Item>

@@ -8,13 +8,13 @@ configure({adapter: new Adapter()});
 
 describe('The healthcheck container', () => {
   it('Shows it is loading when rendered', () => {
-    const healthCheckPage = shallow(<HealthCheck diagnosticData={{status: 'loading'}}/>);
+    const healthCheckPage = shallow(<HealthCheck diagnosticData={{state: 'loading'}}/>);
     expect(healthCheckPage.find(WideCard).props().body).toContain('Loading...');
   });
 
   it('Shows a message if the data fails to load', () => {
     const healthCheckPage = shallow(
-      <HealthCheck diagnosticData={{status: "loadFail", result: 'SOME ERROR'}} />,
+      <HealthCheck diagnosticData={{state: "loadFail", result: 'SOME ERROR'}} />,
     );
     expect(healthCheckPage.find(WideCard).props().body).toContain('Data failed to load. Error: SOME ERROR');
 

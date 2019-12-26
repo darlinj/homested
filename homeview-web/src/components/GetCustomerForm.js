@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Row,
   Col,
@@ -10,15 +10,14 @@ import {
 } from 'react-bootstrap';
 
 const GetCustomerForm = props => {
-  const [searchTerm, setSearchTerm] = useState('');
 
   const handleChange = event => {
-    setSearchTerm(event.target.value);
+    props.setSearchTerm(event.target.value);
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    props.getCustomerData(searchTerm);
+    props.getCustomerData(props.searchTerm);
   };
 
   const renderForm = props => {
@@ -31,7 +30,7 @@ const GetCustomerForm = props => {
               <FormControl
                 autoFocus
                 type="text"
-                value={searchTerm || ''}
+                value={props.searchTerm || ''}
                 onChange={handleChange}
                 placeholder="Phone number, RBSID or Hub Serial"
                 className="mr-sm-2 search-term"

@@ -26,4 +26,11 @@ describe('The healthcheck component', () => {
     );
     expect(healthCheck.text()).toContain('FaCheckCircle');
   });
+
+  it('Shows the greyed out symbol if the data is missing', () => {
+    const healthCheck = shallow(
+      <HealthCheck diagnosticData={{state: 'loaded'}} />,
+    );
+    expect(healthCheck.text()).toContain('FaMinusCircle');
+  });
 });
