@@ -1,53 +1,21 @@
 'use strict';
-const axios = require('axios');
-var parser = require('fast-xml-parser');
+var databaseManager = require('./databaseManager');
+var deviceManagementAPI = require('./deviceManagementAPI');
 
-const makeHDMRequest = async(searchTerm, operation_params) => {
-  const adjustedSearchTerm = searchTerm.replace(/ /g, '+');
-  console.info('URL', `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}${operation_params}`)
-  return axios({
-    method: 'get',
-    auth: {
-      username: process.env.HDM_USER,
-      password: process.env.HDM_PASSWORD,
-    },
-    url: `${process.env.HDM_URL_PART1}${adjustedSearchTerm}${process.env.HDM_URL_PART2}${operation_params}`,
-  })
-    .then(function(response) {
-      console.log('RESPONSE:', response.data);
-      const parsedData = parser.parse(response.data, {ignoreNameSpace: true});
-      const responseData = parsedData['requestResponses']['requestResponse'];
-      const errorData = responseData['errorMessage'];
-      let filteredData = {};
-      if (responseData['nameValues']) {
-        filteredData = responseData['nameValues'].reduce(
-          (acc, nameValuePair) => {
-            return {[nameValuePair.name]: nameValuePair.value || '', ...acc};
-          },
-          {},
-        );
-      }
-      return {result: errorData, data: filteredData};
-    })
-    .catch(function(error) {
-      console.log('ERROR:', error);
-      return {result: 'ERROR', data: data};
-    });
-};
 
 const logEvent = (event) => {
   console.info('EVENT\n' + JSON.stringify(event, null, 2));
   console.info(
     'SEARCHTERM\n' +
       JSON.stringify(
-        event.queryStringParameters.searchTerm.replace(' ', '+'),
+        event.queryStringParameters.searchTerm.replace(/ /g, '+'),
         null,
         2,
       ),
   );
 }
 
-const getResponse = async (searchTerm, operation) => {
+const makeCustomerResponse = async (searchTerm, operation) => {
   return {
     statusCode: 200,
     headers: {
@@ -55,7 +23,7 @@ const getResponse = async (searchTerm, operation) => {
     },
     body: JSON.stringify(
       {
-        message: await makeHDMRequest(searchTerm, operation)
+        message: await deviceManagementAPI.query(searchTerm, operation)
       },
       null,
       2,
@@ -63,13 +31,44 @@ const getResponse = async (searchTerm, operation) => {
   };
 }
 
+
+const makeDiagnosticsResponse = async (searchTerm, operation) => {
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify(
+      {
+        message: await databaseManager.getItem(searchTerm)
+      },
+      null,
+      2,
+    ),
+  };
+}
+
+const updateDiagnosticDataCache = async (searchTerm, operation) => {
+  const diagnosticData = await deviceManagementAPI.query(searchTerm, operation);
+  diagnosticData.serialNumber = searchTerm;
+  if (/REQUESTED/.test(diagnosticData.result)) {
+    return;
+  }
+  else {
+    databaseManager.saveItem(diagnosticData);
+  }
+}
+
 module.exports.findCustomer = async event => {
   logEvent(event);
-  return await getResponse(event.queryStringParameters.searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
+  const searchTerm = event.queryStringParameters.searchTerm.replace(/ /g,'+');
+  return await makeCustomerResponse(searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
 };
 
 module.exports.getDiagnostics = async event => {
   logEvent(event);
-  return await getResponse(event.queryStringParameters.searchTerm, "operation=diagnosticTest&TestName=selfTest");
+  const searchTerm = event.queryStringParameters.searchTerm.replace(/ /g,'+');
+  updateDiagnosticDataCache(searchTerm, "operation=diagnosticTest&TestName=selfTest");
+  return await makeDiagnosticsResponse(searchTerm, "operation=diagnosticTest&TestName=selfTest");
 };
 

@@ -1,0 +1,5 @@
+Invoke local:
+assume-role admin sls invoke local -f getDiagnostics --data '{ "queryStringParameters": {"searchTerm":"+084316+NQ61949545"}}'
+
+Creating a user
+aws cognito-idp sign-up --region eu-west-1 --client-id 5o1o1vr4tuln4illfhm2hdr0hj --username joe@somewhere.com --password Passw0rd! --profile=poweruser
