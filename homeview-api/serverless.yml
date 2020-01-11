@@ -18,7 +18,7 @@ provider:
 
 functions:
   getDiagnostics:
-    handler: handler.getDiagnostics
+    handler: diagnostics.get
     environment:
       HDM_USER: ${ssm:HDM_user~true}
       HDM_PASSWORD: ${ssm:HDM_password~true}
@@ -35,7 +35,7 @@ functions:
       - DynamoDBCrudPolicy:
           TableName: ${ssm:diagnosticDataCache~true}
   findCustomer:
-    handler: handler.findCustomer
+    handler: customer.find
     environment:
       HDM_USER: ${ssm:HDM_user~true}
       HDM_PASSWORD: ${ssm:HDM_password~true}

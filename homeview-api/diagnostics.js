@@ -15,23 +15,6 @@ const logEvent = (event) => {
   );
 }
 
-const makeCustomerResponse = async (searchTerm, operation) => {
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    body: JSON.stringify(
-      {
-        message: await deviceManagementAPI.query(searchTerm, operation)
-      },
-      null,
-      2,
-    ),
-  };
-}
-
-
 const makeDiagnosticsResponse = async (searchTerm, operation) => {
   return {
     statusCode: 200,
@@ -59,13 +42,7 @@ const updateDiagnosticDataCache = async (searchTerm, operation) => {
   }
 }
 
-module.exports.findCustomer = async event => {
-  logEvent(event);
-  const searchTerm = event.queryStringParameters.searchTerm.replace(/ /g,'+');
-  return await makeCustomerResponse(searchTerm, "operation=findDeviceById&mode=true&associatedlandevices=true");
-};
-
-module.exports.getDiagnostics = async event => {
+module.exports.get= async event => {
   logEvent(event);
   const searchTerm = event.queryStringParameters.searchTerm.replace(/ /g,'+');
   updateDiagnosticDataCache(searchTerm, "operation=diagnosticTest&TestName=selfTest");
