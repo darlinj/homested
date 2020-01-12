@@ -17,7 +17,7 @@ const GetCustomerForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    props.getCustomerData(props.searchTerm);
+    props.getCustomerData();
   };
 
   const renderForm = props => {
@@ -30,7 +30,7 @@ const GetCustomerForm = props => {
               <FormControl
                 autoFocus
                 type="text"
-                value={props.searchTerm || ''}
+                value={props.searchTerm}
                 onChange={handleChange}
                 placeholder="Phone number, RBSID or Hub Serial"
                 className="mr-sm-2 search-term"
@@ -40,8 +40,7 @@ const GetCustomerForm = props => {
               Go
             </Button>
           </Form>
-          Please enter the customer telephone number, RBSID or Serial Number of
-          the Hub
+          Please enter the customer telephone number, RBSID or Serial Number of the Hub
         </Col>
       </Row>
     );

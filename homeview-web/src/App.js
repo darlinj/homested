@@ -8,13 +8,11 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import axios from 'axios';
 
 const App = props => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [customerData, setCustomerData] = useState({state: 'initialized'});
   const [diagnosticData, setDiagnosticData] = useState({state: 'initialized'});
-  const [requestParams, setRequestParams] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -47,7 +45,6 @@ const App = props => {
     API.get('homeviewAPI', `/find-customer?searchTerm=${encodeURI(searchTerm)}`)
       .then(response => {
         setCustomerData({...response.message, state: 'loaded'});
-        setRequestParams(response.searchTerm);
       })
       .catch(e => {
         console.log(e);
@@ -58,15 +55,6 @@ const App = props => {
     if (!isAuthenticated) {
       return;
     }
-    axios.interceptors.request.use(
-      config => {
-        config.timeout = 50000;
-        return config;
-      },
-      error => {
-        return Promise.reject(error);
-      },
-    );
     setDiagnosticData({state: 'loading'});
     API.get(
       'homeviewAPI',
@@ -74,11 +62,9 @@ const App = props => {
     )
       .then(response => {
         setDiagnosticData({...response.message, state: 'loaded'});
-        setRequestParams(response.searchTerm);
       })
       .catch(e => {
         console.log(e);
-        getDiagnosticData();
         setDiagnosticData({state: 'failed', result: e});
       });
   };
@@ -90,7 +76,7 @@ const App = props => {
     getDiagnosticData: getDiagnosticData,
     customerData: customerData,
     diagnosticData: diagnosticData,
-    requestParams: requestParams,
+    searchTerm: searchTerm,
   };
 
   return (

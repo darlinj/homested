@@ -19,9 +19,10 @@ describe('The nav form component', () => {
   });
 
   it('calls the getCustomerData function when the form is submitted', async () => {
-    const callback = jest.fn(x => 'foo');
+    const getCustomerData = jest.fn(x => 'foo');
+    const setSearchTerm = jest.fn(x => 'foo');
     const wrapper = mount(
-      <GetCustomerform isAuthenticated="true" getCustomerData={callback} />,
+      <GetCustomerform isAuthenticated="true" getCustomerData={getCustomerData} setSearchTerm={setSearchTerm} seaarchTerm="Customer1234" />,
     );
     await act(async () => {
       const searchTerm = wrapper.find('input.search-term');
@@ -32,7 +33,6 @@ describe('The nav form component', () => {
     await act(async () => {
       wrapper.find('form.search-form').simulate('submit');
     });
-    expect(callback.mock.calls.length).toBe(1);
-    expect(callback.mock.calls[0][0]).toBe('customer1234');
+    expect(getCustomerData.mock.calls.length).toBe(1);
   });
 });
